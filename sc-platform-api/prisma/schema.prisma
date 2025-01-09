@@ -45,7 +45,6 @@ model RefreshToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    String   @map("user_id")
   token     String
-  expiresAt DateTime @default(now()) @map("expires_at")
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("refresh_tokens")
