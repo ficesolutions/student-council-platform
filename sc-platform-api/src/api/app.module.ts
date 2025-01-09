@@ -1,6 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 import configuration from '../config/configuration';
+import { DatabaseModule } from '../database/database.module';
+import { AccessModule } from '../security/jwt/access.module';
+import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './health/health.module';
 
 @Module({
@@ -10,8 +15,12 @@ import { HealthModule } from './health/health.module';
       load: [configuration],
       envFilePath: [`.${process.env.NODE_ENV}.env`, '.env'],
     }),
+    ScheduleModule.forRoot(),
+    DatabaseModule,
+    AuthModule,
+    UserModule,
+    AccessModule,
     HealthModule,
   ],
-  providers: [],
 })
 export class AppModule {}
