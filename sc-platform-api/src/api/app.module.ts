@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import configuration from '../config/configuration';
+import { HealthModule } from './health/health.module';
 
 @Module({
   imports: [
@@ -9,6 +10,7 @@ import configuration from '../config/configuration';
       load: [configuration],
       envFilePath: [`.${process.env.NODE_ENV}.env`, '.env'],
     }),
+    HealthModule,
   ],
   providers: [],
 })
