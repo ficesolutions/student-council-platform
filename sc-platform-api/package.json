@@ -31,6 +31,7 @@
     "@nestjs/swagger": "^8.1.1",
     "@nestjs/terminus": "^10.2.3",
     "@prisma/client": "^6.2.1",
+    "@student-council-platform/utils": "*",
     "bcrypt": "^5.1.1",
     "cookie-parser": "^1.4.7",
     "dotenv": "^16.4.7",
