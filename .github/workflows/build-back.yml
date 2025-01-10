@@ -1,0 +1,20 @@
+name: Build Back-end
+
+on:
+  pull_request:
+    paths:
+      - 'sc-platform-api/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./sc-platform-api/Dockerfile
+          tags: ficesolutions/sc-platform-api

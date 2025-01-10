@@ -1890,7 +1890,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@student-council-platform/utils@workspace:utils":
+"@student-council-platform/utils@npm:*, @student-council-platform/utils@workspace:utils":
   version: 0.0.0-use.local
   resolution: "@student-council-platform/utils@workspace:utils"
   dependencies:
@@ -10326,6 +10326,7 @@ __metadata:
     "@nestjs/terminus": "npm:^10.2.3"
     "@nestjs/testing": "npm:^10.0.0"
     "@prisma/client": "npm:^6.2.1"
+    "@student-council-platform/utils": "npm:*"
     "@types/bcrypt": "npm:^5.0.2"
     "@types/cookie-parser": "npm:^1"
     "@types/express": "npm:^4.17.17"
@@ -10367,6 +10368,7 @@ __metadata:
   resolution: "sc-platform-web@workspace:sc-platform-web"
   dependencies:
     "@eslint/eslintrc": "npm:^3"
+    "@student-council-platform/utils": "npm:*"
     "@types/node": "npm:^20"
     "@types/react": "npm:^19"
     "@types/react-dom": "npm:^19"
