@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../../database/repositories/user.repository';
 import * as bcrypt from 'bcrypt';
-import { User } from '@prisma/client';
+import { State, User } from '@prisma/client';
 import { JwtPayload } from '../../security/jwt/jwt.payload';
 import { JwtService, JwtSignOptions } from '@nestjs/jwt';
 import { SecurityConfigService } from '../../config/security-config.service';
@@ -10,6 +10,10 @@ import { Cron } from '@nestjs/schedule';
 import { RegisterDTO } from '@student-council-platform/utils';
 import { AlreadyRegisteredException } from '../../security/exceptions/already-registered.exception';
 import { UserWithRefreshToken } from '../../security/jwt/refresh/refresh.strategy';
+import { EmailService } from '../email/email.service';
+import { ConfigService } from '@nestjs/config';
+import { NotRegisteredException } from 'src/security/exceptions/not-registered.exception';
+import { TooManyActionsException } from 'src/security/exceptions/too-many-actions.exception';
 
 @Injectable()
 export class AuthService {
@@ -18,6 +22,8 @@ export class AuthService {
     private readonly refreshTokenRepository: RefreshTokenRepository,
     private readonly jwtService: JwtService,
     private readonly config: SecurityConfigService,
+    private readonly emailService: EmailService,
+    private readonly configService: ConfigService,
   ) {}
 
   async register (data: RegisterDTO) {
@@ -26,7 +32,65 @@ export class AuthService {
     }
 
     data.password = await this.hashPassword(data.password);
-    await this.userRepository.create(data);
+    const newUser = await this.userRepository.create(data);
+
+    await this.requestEmailVerification(data.email, newUser.id);
+  }
+
+  private async checkUserVerification (userId: string) {
+    const user = await this.userRepository.findById(userId);
+    if (user?.state !== State.VERIFIED) {
+      await this.userRepository.deleteMany({ id: userId });
+    }
+    return true;
+  }
+
+  private async requestEmailVerification (email: string, userId: string) {
+    const url = `${this.configService.get<string>('frontUrl')}/verify/${userId}`;
+
+    await this.emailService.sendEmail({
+      to: email,
+      subject: 'Email verification',
+      message: 'Click here to verify',
+      link: url,
+    });
+
+    new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(this.checkUserVerification(userId));
+      }, 3600*1000);
+    });
+  }
+
+  async repeatEmailVerification (email: string) {
+    const { id, createdAt, updatedAt, ...user } = await this.userRepository.find({ email });
+    if (!user) {
+      throw new NotRegisteredException('email');
+    }
+    if (user.state === State.VERIFIED) {
+      throw new AlreadyRegisteredException();
+    }
+
+    if (Date.now() - createdAt.getTime() < 60 * 1000) {
+      throw new TooManyActionsException();
+    }
+
+    await this.userRepository.deleteMany({ email });
+    const newUser = await this.userRepository.create({ ...user as RegisterDTO });
+
+    await this.requestEmailVerification(email, newUser.id);
+  }
+
+  async verifyEmail (userId: string) {
+    const user = await this.userRepository.findById(userId);
+    if (!user) {
+      throw new NotRegisteredException('id');
+    }
+    if (user.state === State.VERIFIED) {
+      throw new AlreadyRegisteredException();
+    }
+
+   await this.userRepository.updateById(userId, { state: State.VERIFIED });
   }
 
   async login (user: User) {

@@ -4,7 +4,7 @@ import {
   ApiOkResponse, ApiOperation, ApiParam,
   ApiParamOptions, ApiQuery,
   ApiQueryOptions,
-  ApiResponseOptions, ApiUnauthorizedResponse,
+  ApiResponseOptions, ApiTooManyRequestsResponse, ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { applyDecorators, createParamDecorator, ExecutionContext, UseGuards } from '@nestjs/common';
 import { DefaultForbiddenResponse } from './default/forbidden.response';
@@ -15,6 +15,7 @@ export class ApiDocumentationParams {
   isAuth?: boolean;
   ok?:  ApiResponseOptions | true;
   badRequest?: ApiResponseOptions;
+  tooManyRequests?: ApiResponseOptions;
   forbidden?: ApiResponseOptions | true;
   unauthorized?: ApiResponseOptions | true;
   body?: ApiBodyOptions;
@@ -34,6 +35,7 @@ function addDocumentationDecorators (summary: string, description: string, docum
     { key: 'badRequest', decorator: ApiBadRequestResponse },
     { key: 'forbidden', decorator: ApiForbiddenResponse, default: DefaultForbiddenResponse },
     { key: 'unauthorized', decorator: ApiUnauthorizedResponse, default: DefaultUnauthorizedResponse },
+    { key: 'tooManyRequests', decorator: ApiTooManyRequestsResponse },
   ];
 
   const decorators = [

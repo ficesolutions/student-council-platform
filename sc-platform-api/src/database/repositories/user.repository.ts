@@ -38,4 +38,8 @@ export class UserRepository {
       where: { id },
     });
   }
+
+  deleteMany (where: Prisma.UserWhereInput) {
+    return this.prisma.user.deleteMany({ where });
+  }
 }
