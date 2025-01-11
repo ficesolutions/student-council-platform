@@ -7,6 +7,7 @@ import { DatabaseModule } from '../database/database.module';
 import { AccessModule } from '../security/jwt/access.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './health/health.module';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { HealthModule } from './health/health.module';
     UserModule,
     AccessModule,
     HealthModule,
+    EmailModule,
   ],
 })
 export class AppModule {}

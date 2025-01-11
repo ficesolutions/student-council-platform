@@ -1,5 +1,6 @@
 export default () => ({
   port: parseInt(process.env.PORT) || 3000,
+  frontUrl: process.env.FRONT_URL,
   security: {
     access: {
       secret: process.env.ACCESS_SECRET || '',
