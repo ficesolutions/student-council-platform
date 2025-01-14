@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { ApiEndpoint } from 'src/documentation/decorators';
 import { UserService } from './user.service';
@@ -6,6 +6,8 @@ import { UserMapper } from './user.mapper';
 import { UserDocumentation } from 'src/documentation/user';
 import { UserByIdPipe } from './user.pipe';
 import { AccessGuard } from 'src/security/jwt/access/access.guard';
+import { UpdateDTO } from '@student-council-platform/utils/requests/user';
+import { UserResponse } from '@student-council-platform/utils';
 
 @ApiTags('User')
 @Controller({
@@ -27,6 +29,20 @@ export class UserController {
     @Param('userId', UserByIdPipe) userId: string,
   ) {
     const user = await this.userService.getUser(userId);
+    return this.userMapper.getUser(user);
+  }
+
+  @ApiEndpoint({
+    summary: 'Update user\'s data',
+    guards: AccessGuard,
+    documentation: UserDocumentation.UPDATE_USER,
+  })
+  @Patch('/:userId')
+  async updateUser (
+    @Param('userId', UserByIdPipe) userId: string,
+    @Body() body: UpdateDTO,
+  ): Promise<UserResponse> {
+    const user = await this.userService.updateUser(userId, body);
     return this.userMapper.getUser(user);
   }
 }
