@@ -9,6 +9,7 @@ import { ConfigurationModule } from '../../config/configuration.module';
 import { SecurityConfigService } from '../../config/security-config.service';
 import { RefreshGuard } from './refresh/refresh.guard';
 import { RefreshStrategy } from './refresh/refresh.strategy';
+import { AdminOrMeGuard } from '../roles/admin-or-me.guard';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { RefreshStrategy } from './refresh/refresh.strategy';
   providers: [
     AccessGuard,
     RefreshGuard,
+    AdminOrMeGuard,
     LocalGuard,
     AccessStrategy,
     RefreshStrategy,
@@ -36,6 +38,7 @@ import { RefreshStrategy } from './refresh/refresh.strategy';
   exports: [
     AccessGuard,
     LocalGuard,
+    AdminOrMeGuard,
     RefreshGuard,
   ],
 })
