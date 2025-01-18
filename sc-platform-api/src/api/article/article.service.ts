@@ -13,4 +13,8 @@ export class ArticleService {
   ): Promise<Article> {
     return this.articleRepository.create(data, authorId);
   }
+
+  async getArticle (id: string) {
+    return this.articleRepository.findById(id);
+  }
 }
