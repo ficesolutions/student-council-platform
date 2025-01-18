@@ -5,9 +5,7 @@ import { InvalidEntityIdException } from 'src/security/exceptions/invalid-entity
 
 @Injectable()
 export class UserByIdPipe implements PipeTransform {
-  constructor (
-    private userRepository: UserRepository,
-  ) {}
+  constructor (private readonly userRepository: UserRepository) {}
 
   async transform (userId: string) {
     const user: User = await this.userRepository.findById(userId);

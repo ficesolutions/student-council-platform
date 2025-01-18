@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ArticleRepository } from '../../database/repositories/article.repository';
 import { CreateArticleDTO } from '@student-council-platform/utils';
-import { DbArticle } from '../../database/entities/DbArticle';
+import { Article } from '../../database/entities/article.entity';
 
 @Injectable()
 export class ArticleService {
-  constructor (
-    private articleRepository: ArticleRepository,
-  ) {}
+  constructor (private readonly articleRepository: ArticleRepository,) {}
 
   async create (
     data: CreateArticleDTO,
     authorId: string,
-  ): Promise<DbArticle> {
+  ): Promise<Article> {
     return this.articleRepository.create(data, authorId);
   }
 }

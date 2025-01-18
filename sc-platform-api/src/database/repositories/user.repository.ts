@@ -1,52 +1,51 @@
 import { Injectable } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma.service';
 import { RegisterDTO } from '@student-council-platform/utils';
-import { DbUser } from '../entities/DbUser';
+import { User } from '../entities/user.entity';
 
 @Injectable()
 export class UserRepository {
   constructor (private readonly prisma: PrismaService) {}
 
-  findMany (where?: Prisma.UserWhereInput,) {
-    return this.prisma.user.findMany({ 
+  async findMany (where?: Prisma.UserWhereInput): Promise<User[]> {
+    return this.prisma.user.findMany({
       where,
-    }) as any as DbUser;
+    }) as Promise<User[]>;
   }
 
-  findById (id: string) {
+  async findById (id: string): Promise<User> {
     return this.prisma.user.findUnique({
       where: { id },
-    }) as any as DbUser;
+    }) as Promise<User>;
   }
 
-  find (where?: Prisma.UserWhereInput,) {
-    return this.prisma.user.findFirst({ 
+  async find (where?: Prisma.UserWhereInput): Promise<User> {
+    return this.prisma.user.findFirst({
       where,
-    }) as any as DbUser;
+    }) as Promise<User>;
   }
 
-  create (data: RegisterDTO): Promise<User> {
+  async create (data: RegisterDTO): Promise<User> {
     return this.prisma.user.create({
       data,
-    });
+    }) as Promise<User>;
   }
 
-  updateById (id: string, data: Prisma.UserUpdateInput) {
+  async updateById (id: string, data: Prisma.UserUpdateInput): Promise<User> {
     return this.prisma.user.update({
       where: { id },
       data,
-    }) as any as DbUser;
+    }) as Promise<User>;
   }
 
-  deleteById (id: string) {
+  async deleteById (id: string): Promise<User> {
     return this.prisma.user.delete({
       where: { id },
-    }) as any as DbUser;
+    }) as Promise<User>;
   }
 
-  deleteMany (where: Prisma.UserWhereInput) {
+  async deleteMany (where: Prisma.UserWhereInput) {
     return this.prisma.user.deleteMany({ where });
   }
 }

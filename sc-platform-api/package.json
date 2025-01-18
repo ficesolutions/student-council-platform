@@ -20,6 +20,9 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
+    "@automapper/classes": "^8.8.1",
+    "@automapper/core": "^8.8.1",
+    "@automapper/nestjs": "^8.8.1",
     "@nestjs-modules/mailer": "^2.0.2",
     "@nestjs/common": "^10.0.0",
     "@nestjs/config": "^3.3.0",
