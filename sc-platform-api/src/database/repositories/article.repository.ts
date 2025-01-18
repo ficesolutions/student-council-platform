@@ -18,4 +18,10 @@ export class ArticleRepository {
       },
     });
   }
+  
+  async findById (id: string): Promise<Article> {
+    return this.prisma.article.findUnique({
+      where: { id },
+    }) as any as Article;
+  }
 }

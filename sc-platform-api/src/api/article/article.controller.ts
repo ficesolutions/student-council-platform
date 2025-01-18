@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Param, Post } from '@nestjs/common';
 import { ArticleService } from './article.service';
 import { ApiEndpoint, GetUser } from '../../documentation/decorators';
 import { ArticleResponse, CreateArticleDTO } from '@student-council-platform/utils';
@@ -7,6 +7,7 @@ import { Article } from '../../database/entities/article.entity';
 import { AccessGuard } from '../../security/jwt/access/access.guard';
 import { ArticleDocumentation } from '../../documentation/article';
 import { MapInterceptor } from '@automapper/nestjs';
+import { ArticleByIdPipe } from './article.pipe';
 
 @Controller('article')
 export class ArticleController {
@@ -24,5 +25,17 @@ export class ArticleController {
     @GetUser('id') authorId: string,
   ): Promise<ArticleResponse> {
     return this.articleService.create(body, authorId);
+  }
+
+  @ApiEndpoint({
+    summary: 'Get an article with selected id',
+    interceptors: MapInterceptor(Article, ArticleResponse),
+    documentation: ArticleDocumentation.GET,
+  })
+  @Post()
+  async getArticle (
+    @Param('id', ArticleByIdPipe) id: string,
+  ): Promise<ArticleResponse> {
+    return this.articleService.getArticle(id);
   }
 }
