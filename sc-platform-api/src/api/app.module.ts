@@ -9,6 +9,8 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { HealthModule } from './health/health.module';
 import { EmailModule } from './email/email.module';
 import { ArticleModule } from './article/article.module';
+import { AutomapperModule } from '@automapper/nestjs';
+import { classes } from '@automapper/classes';
 
 @Module({
   imports: [
@@ -16,6 +18,9 @@ import { ArticleModule } from './article/article.module';
       isGlobal: true,
       load: [configuration],
       envFilePath: [`.${process.env.NODE_ENV}.env`, '.env'],
+    }),
+    AutomapperModule.forRoot({
+      strategyInitializer: classes(),
     }),
     ScheduleModule.forRoot(),
     DatabaseModule,

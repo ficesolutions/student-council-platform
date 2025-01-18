@@ -1,2 +1,2 @@
-export * from './UserResponse';
-export * from './article.response';
+export * from './user';
+export * from './article';

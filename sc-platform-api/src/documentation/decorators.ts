@@ -6,7 +6,14 @@ import {
   ApiQueryOptions,
   ApiResponseOptions, ApiTooManyRequestsResponse, ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { applyDecorators, createParamDecorator, ExecutionContext, UseGuards } from '@nestjs/common';
+import {
+  applyDecorators,
+  createParamDecorator,
+  ExecutionContext,
+  NestInterceptor,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { DefaultForbiddenResponse } from './default/forbidden.response';
 import { DefaultUnauthorizedResponse } from './default/unauthorized.response';
 import { UserWithRefreshToken } from '../security/jwt/refresh/refresh.strategy';
@@ -26,6 +33,7 @@ export class ApiDocumentationParams {
 export class ApiEndpointParams {
   summary: string;
   guards?: any | any[];
+  interceptors?: NestInterceptor | NestInterceptor[];
   documentation? : ApiDocumentationParams;
 }
 
@@ -71,7 +79,12 @@ function addDocumentationDecorators (summary: string, description: string, docum
   return decorators;
 }
 
-export function ApiEndpoint ({ summary, guards, documentation }: ApiEndpointParams) {
+export function ApiEndpoint ({
+  summary,
+  guards,
+  interceptors,
+  documentation,
+}: ApiEndpointParams) {
   let description = '';
 
   if (guards) {
@@ -83,6 +96,11 @@ export function ApiEndpoint ({ summary, guards, documentation }: ApiEndpointPara
 
   if (guards) {
     decorators.push(UseGuards(...guards));
+  }
+
+  if (interceptors) {
+    interceptors = Array.isArray(interceptors) ? interceptors : [interceptors];
+    decorators.push((UseInterceptors(...interceptors)));
   }
 
   return applyDecorators(...decorators);
