@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: qwerty12345
+      POSTGRES_DB: sc-platform
+    ports:
+      - '5432:5432'
+
+  api:
+    build:
+      context: ../
+      dockerfile: ./sc-platform-api/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+    ports:
+      - '${PORT}:${PORT}'

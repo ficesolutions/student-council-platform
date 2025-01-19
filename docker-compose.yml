@@ -1,0 +1,58 @@
+version: '3'
+
+networks:
+  sc-platform:
+    external: true
+  sc-platform-dev:
+    external: true
+
+services:
+  sc-platform-api:
+    image: ficesolutions/sc-platform-api:master
+    container_name: sc-platform-api
+    restart: unless-stopped
+    networks:
+      - sc-platform
+    depends_on:
+      - postgres-dev
+    ports:
+      - "3000:3000"
+    env_file:
+      - ~/deployment/env/.sc-platform-api.env
+
+  sc-platform-api-dev:
+    image: ficesolutions/sc-platform-api:dev
+    container_name: sc-platform-api-dev
+    restart: unless-stopped
+    networks:
+      - sc-platform-dev
+    depends_on:
+      - postgres-dev
+    env_file:
+      - ~/development/env/.sc-platform-api-dev.env
+    ports:
+      - "4455:3000"
+
+  postgres:
+    image: postgres:16
+    container_name: postgres
+    networks:
+      - sc-platform
+    volumes:
+      - ~/deployment/postgres/data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    env_file:
+      - ~/deployment/env/.postgres.env
+
+  postgres-dev:
+    image: postgres:16
+    container_name: postgres-dev
+    networks:
+      - sc-platform-dev
+    volumes:
+      - ~/development/postgres/data:/var/lib/postgresql/data
+    env_file:
+      - ~/development/env/.postgres-dev.env
+    ports:
+      - "4003:5432"

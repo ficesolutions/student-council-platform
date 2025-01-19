@@ -5,9 +5,7 @@ import { EmailDTO } from './dtos/email.dto';
 @Injectable()
 export class EmailService {
 
-  constructor (
-    private mailerService: MailerService,
-  ) {}
+  constructor (private readonly mailerService: MailerService,) {}
 
   async sendEmail ({ to, subject, message, link }: EmailDTO) {
     await this.mailerService.sendMail({

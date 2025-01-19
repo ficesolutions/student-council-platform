@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class RefreshTokenRepository {
-  constructor (private readonly  prisma: PrismaService) {}
+  constructor (private readonly prisma: PrismaService) {}
 
   findById (id: string) {
     return this.prisma.refreshToken.findUnique({

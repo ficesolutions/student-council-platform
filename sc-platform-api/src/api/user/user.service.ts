@@ -5,9 +5,7 @@ import { DbUser } from '../../database/entities/DbUser';
 
 @Injectable()
 export class UserService {
-  constructor (
-    private userRepository: UserRepository,
-  ) {}
+  constructor (private readonly userRepository: UserRepository,) {}
 
   async getUser (userId: string) {
     return this.userRepository.findById(userId);
